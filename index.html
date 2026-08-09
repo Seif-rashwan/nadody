@@ -415,6 +415,35 @@
     @keyframes fadeInUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
     .delay-1{animation-delay:0.1s;} .delay-2{animation-delay:0.2s;} .delay-3{animation-delay:0.3s;}
 
+    /* LOVE JAR */
+    .jar-container { margin:0 20px 24px; background:linear-gradient(135deg,rgba(155,114,207,0.15),rgba(232,116,138,0.15)); border:1px solid rgba(232,116,138,0.25); border-radius:22px; padding:24px 20px; text-align:center; position:relative; overflow:hidden; }
+    .jar-title { font-family:'Dancing Script',cursive; font-size:1.6rem; color:var(--rose-light); margin-bottom:12px; }
+    .jar-graphic { font-size:4.5rem; margin-bottom:16px; cursor:pointer; transition:transform 0.3s; display:inline-block; filter:drop-shadow(0 10px 15px rgba(232,116,138,0.3)); }
+    .jar-graphic:active { transform:scale(0.9) rotate(-5deg); }
+    .jar-graphic.shake { animation:jarShake 0.4s ease-in-out; }
+    @keyframes jarShake { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-10deg);} 75%{transform:rotate(10deg);} }
+    .jar-paper { font-family:'Caveat',cursive; font-size:1.3rem; line-height:1.5; color:var(--ink); background:var(--parchment); padding:20px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4); margin-top:10px; display:none; opacity:0; transform:translateY(-20px) scale(0.9); transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .jar-paper.open { display:block; opacity:1; transform:translateY(0) scale(1); }
+
+    /* GOLDEN TICKETS */
+    .tickets-header { padding:20px 20px 10px; text-align:center; }
+    .tickets-header h2 { font-family:'Dancing Script',cursive; font-size:2rem; font-weight:700; background:linear-gradient(135deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .tickets-header p { font-size:0.82rem; color:var(--text-dim); margin-top:6px; }
+    .tickets-list { padding:0 16px; display:flex; flex-direction:column; gap:16px; }
+    .ticket-card { background:linear-gradient(135deg,rgba(232,201,122,0.15),rgba(232,201,122,0.05)); border:2px dashed rgba(232,201,122,0.4); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:all 0.3s; }
+    .ticket-card::before, .ticket-card::after { content:''; position:absolute; top:50%; width:20px; height:20px; background:var(--bg-deep); border-radius:50%; transform:translateY(-50%); border:2px dashed rgba(232,201,122,0.4); }
+    .ticket-card::before { left:-12px; border-left:none; border-top:none; border-bottom:none; }
+    .ticket-card::after { right:-12px; border-right:none; border-top:none; border-bottom:none; }
+    .ticket-title { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold-light); margin-bottom:6px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+    .ticket-desc { font-size:0.85rem; color:var(--cream); line-height:1.5; margin-bottom:14px; font-style:italic; }
+    .ticket-btn { background:linear-gradient(135deg,var(--gold),#d4af37); border:none; padding:10px 24px; border-radius:20px; font-weight:700; color:#1a0a2e; cursor:pointer; font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:0.75rem; box-shadow:0 4px 15px rgba(232,201,122,0.3); transition:all 0.2s; }
+    .ticket-btn:active { transform:scale(0.95); }
+    .ticket-card.redeemed { opacity:0.6; filter:grayscale(0.6); border-color:var(--glass-border); background:var(--glass); }
+    .ticket-card.redeemed .ticket-btn { display:none; }
+    .ticket-stamp { display:none; position:absolute; top:50%; right:30px; transform:translateY(-50%) rotate(-15deg); font-family:'Caveat',cursive; font-size:2rem; color:var(--rose); border:3px solid var(--rose); padding:4px 12px; border-radius:8px; font-weight:700; opacity:0; }
+    .ticket-card.redeemed .ticket-stamp { display:block; animation:stampPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    @keyframes stampPop { 0%{opacity:0; transform:translateY(-50%) scale(2) rotate(0);} 100%{opacity:0.8; transform:translateY(-50%) scale(1) rotate(-15deg);} }
+
     #audio-player { display:none; }
   </style>
 </head>
@@ -548,17 +577,18 @@
             <div class="count-unit"><div class="count-num" id="cnt-secs">—</div><div class="count-lbl">Secs</div></div>
           </div>
         </div>
-        <div class="love-msg-card fade-in-up delay-2">
-          <div class="love-msg-label">💌 Today's Reason I Love You</div>
-          <div class="love-msg-text" id="love-msg-text">Loading...</div>
-          <div class="love-msg-date" id="love-msg-date"></div>
-          <div class="love-msg-refresh" onclick="refreshLoveMsg()">↻</div>
+        <div class="jar-container fade-in-up delay-2">
+          <div class="jar-title">The Jar of Love</div>
+          <div class="jar-graphic" id="jar-graphic" onclick="openJarNote()">🫙</div>
+          <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:8px;">Tap the jar when you need a smile</div>
+          <div class="jar-paper" id="jar-paper"></div>
         </div>
         <div class="section-title fade-in-up delay-3">✨ Explore Our Story</div>
         <div class="quick-cards fade-in-up delay-3">
           <div class="quick-card" onclick="switchTab('timeline')"><div class="quick-card-icon">📜</div><div class="quick-card-title">Timeline</div><div class="quick-card-sub">Our memories</div></div>
           <div class="quick-card" onclick="switchTab('gallery')"><div class="quick-card-icon">🖼️</div><div class="quick-card-title">Gallery</div><div class="quick-card-sub">Our moments</div></div>
           <div class="quick-card" onclick="switchTab('cards')"><div class="quick-card-icon">💌</div><div class="quick-card-title">Love Notes</div><div class="quick-card-sub">Tap to reveal</div></div>
+          <div class="quick-card" onclick="switchTab('tickets')"><div class="quick-card-icon">🎫</div><div class="quick-card-title">Golden Tickets</div><div class="quick-card-sub">Redeem them</div></div>
         </div>
         <div style="height:20px;"></div>
       </div>
@@ -584,13 +614,20 @@
         <div style="height:20px;"></div>
       </div>
 
+      <!-- GOLDEN TICKETS -->
+      <div class="tab-page" id="tab-tickets">
+        <div class="tickets-header"><h2>Golden Tickets 🎫</h2><p>Use them wisely... or don't. They're all yours.</p></div>
+        <div class="tickets-list" id="tickets-list"></div>
+        <div style="height:30px;"></div>
+      </div>
+
     </div><!-- end content -->
 
     <div class="bottom-nav">
       <div class="nav-item active" id="nav-home" onclick="switchTab('home')"><div class="nav-icon">🏡</div><div class="nav-label">Home</div></div>
       <div class="nav-item" id="nav-timeline" onclick="switchTab('timeline')"><div class="nav-icon">📜</div><div class="nav-label">Timeline</div></div>
       <div class="nav-item" id="nav-gallery" onclick="switchTab('gallery')"><div class="nav-icon">🖼️</div><div class="nav-label">Gallery</div></div>
-      <div class="nav-item" id="nav-cards" onclick="switchTab('cards')"><div class="nav-icon">💌</div><div class="nav-label">Love Notes</div></div>
+      <div class="nav-item" id="nav-tickets" onclick="switchTab('tickets')"><div class="nav-icon">🎫</div><div class="nav-label">Tickets</div></div>
     </div>
   </div>
 </div>
@@ -789,6 +826,13 @@ const FLIP_CARDS = [
   { frontIcon:"🎂", frontHint:"A birthday secret...", backEmoji:"🎂", backText:"Happy Birthday, Nada. Being yours — even a little bit — is the greatest gift I could ask for. 💕" },
 ];
 
+const GOLDEN_TICKETS = [
+  { id: 't1', title: "Instant Forgiveness", desc: "Redeem this ticket to instantly win any argument or be forgiven for a small mistake. No questions asked. 🤫" },
+  { id: 't2', title: "A Night On Me", desc: "A fully paid, fully planned date night doing whatever you want. Just tell me when. 🥂" },
+  { id: 't3', title: "Long Hug Session", desc: "Valid for one very long, very tight hug. Can be used anywhere, anytime. 🤗" },
+  { id: 't4', title: "Your Favorite Treat", desc: "Redeem for your favorite chocolate, dessert, or coffee delivered to you. 🍫☕" }
+];
+
 // ════════════════════════════════════════════════════
 // GAME STATE
 // ════════════════════════════════════════════════════
@@ -954,10 +998,10 @@ function enterApp() {
 function initApp() {
   updateCountdown();
   setInterval(updateCountdown, 1000);
-  updateLoveMsg();
   renderTimeline();
   renderGallery();
   renderFlipCards();
+  renderTickets();
   checkBirthday();
 }
 
@@ -975,18 +1019,44 @@ function updateCountdown() {
   document.getElementById('cnt-secs').textContent = String(secs).padStart(2,'0');
 }
 
-// ── LOVE MESSAGES ──
-function updateLoveMsg() {
-  const today = new Date();
-  currentMsgIndex = today.getDate() % CONFIG.loveMsgs.length;
-  document.getElementById('love-msg-text').textContent = CONFIG.loveMsgs[currentMsgIndex];
-  document.getElementById('love-msg-date').textContent = today.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+// ── LOVE JAR ──
+function openJarNote() {
+  const jar = document.getElementById('jar-graphic');
+  const paper = document.getElementById('jar-paper');
+  jar.classList.add('shake');
+  setTimeout(() => jar.classList.remove('shake'), 400);
+
+  paper.classList.remove('open');
+  setTimeout(() => {
+    const randomMsg = CONFIG.loveMsgs[Math.floor(Math.random() * CONFIG.loveMsgs.length)];
+    paper.textContent = randomMsg;
+    paper.classList.add('open');
+  }, 300);
 }
-function refreshLoveMsg() {
-  currentMsgIndex = (currentMsgIndex + 1) % CONFIG.loveMsgs.length;
-  const el = document.getElementById('love-msg-text');
-  el.style.opacity = 0;
-  setTimeout(() => { el.textContent = CONFIG.loveMsgs[currentMsgIndex]; el.style.transition='opacity 0.5s'; el.style.opacity=1; }, 300);
+
+// ── GOLDEN TICKETS ──
+function renderTickets() {
+  const redeemed = JSON.parse(localStorage.getItem('nadody_tickets') || '{}');
+  document.getElementById('tickets-list').innerHTML = GOLDEN_TICKETS.map(t => {
+    const isRedeemed = redeemed[t.id];
+    return `
+      <div class="ticket-card ${isRedeemed ? 'redeemed' : ''}" id="card-${t.id}">
+        <div class="ticket-title">${t.title}</div>
+        <div class="ticket-desc">${t.desc}</div>
+        <button class="ticket-btn" onclick="redeemTicket('${t.id}')">Redeem Ticket ✨</button>
+        <div class="ticket-stamp">Redeemed</div>
+      </div>
+    `;
+  }).join('');
+}
+function redeemTicket(id) {
+  if (confirm("Are you sure you want to redeem this ticket now?")) {
+    const redeemed = JSON.parse(localStorage.getItem('nadody_tickets') || '{}');
+    redeemed[id] = true;
+    localStorage.setItem('nadody_tickets', JSON.stringify(redeemed));
+    document.getElementById(`card-${id}`).classList.add('redeemed');
+    launchConfetti();
+  }
 }
 
 // ── RENDER TIMELINE ──
