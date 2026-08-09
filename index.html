@@ -326,6 +326,7 @@
     .home-greeting { font-family:'Dancing Script',cursive; font-size:2.6rem; font-weight:700; line-height:1.2; background:linear-gradient(135deg,var(--gold),var(--rose),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     .home-sub { font-size:0.88rem; color:var(--text-dim); line-height:1.6; max-width:300px; margin:0 auto 24px; }
     .countdown-widget { margin:0 20px 24px; text-align:center; padding-top:10px; }
+    .countdown-divider { text-align:center; color:rgba(212,175,55,0.4); font-size:1.2rem; margin-bottom:24px; }
     .countdown-subtitle { font-size:0.55rem; color:var(--gold); text-transform:uppercase; letter-spacing:4px; margin-bottom:10px; font-weight:600; }
     .countdown-title { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--text-main); margin-bottom:28px; font-weight:400; }
     .countdown-numbers { display:flex; justify-content:center; gap:10px; }
@@ -560,23 +561,48 @@
           <div class="home-sub">This little world was built just for you — a collection of our most precious moments together 💫</div>
         </div>
         <div class="countdown-widget fade-in-up delay-1">
+          <div class="countdown-subtitle">OUR JOURNEY</div>
+          <div class="countdown-title">Days we've shared</div>
+          <div class="countdown-numbers">
+            <div class="count-card">
+              <div class="count-num" id="cnt-up-days">—</div>
+              <div class="count-lbl">DAYS</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-up-hours">—</div>
+              <div class="count-lbl">HOURS</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-up-mins">—</div>
+              <div class="count-lbl">MINUTES</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-up-secs">—</div>
+              <div class="count-lbl">SECONDS</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="countdown-divider fade-in-up delay-1">✦</div>
+
+        <div class="countdown-widget fade-in-up delay-1">
           <div class="countdown-subtitle">COUNTING THE MOMENTS</div>
           <div class="countdown-title">Until we celebrate</div>
           <div class="countdown-numbers">
             <div class="count-card">
-              <div class="count-num" id="cnt-days">—</div>
+              <div class="count-num" id="cnt-down-days">—</div>
               <div class="count-lbl">DAYS</div>
             </div>
             <div class="count-card">
-              <div class="count-num" id="cnt-hours">—</div>
+              <div class="count-num" id="cnt-down-hours">—</div>
               <div class="count-lbl">HOURS</div>
             </div>
             <div class="count-card">
-              <div class="count-num" id="cnt-mins">—</div>
+              <div class="count-num" id="cnt-down-mins">—</div>
               <div class="count-lbl">MINUTES</div>
             </div>
             <div class="count-card">
-              <div class="count-num" id="cnt-secs">—</div>
+              <div class="count-num" id="cnt-down-secs">—</div>
               <div class="count-lbl">SECONDS</div>
             </div>
           </div>
@@ -1011,23 +1037,38 @@ function initApp() {
 
 // ── COUNTDOWN ──
 function updateCountdown() {
-  const targetDate = new Date("2026-11-20T00:00:00");
-  const diff = targetDate - new Date();
-  if (diff < 0) {
-    document.getElementById('cnt-days').textContent = '00';
-    document.getElementById('cnt-hours').textContent = '00';
-    document.getElementById('cnt-mins').textContent = '00';
-    document.getElementById('cnt-secs').textContent = '00';
-    return;
+  // Count UP (Our Journey)
+  const startDate = new Date(CONFIG.startDate);
+  const diffUp = new Date() - startDate;
+  if (diffUp >= 0) {
+    const daysUp = Math.floor(diffUp/86400000);
+    const hoursUp = Math.floor((diffUp%86400000)/3600000);
+    const minsUp = Math.floor((diffUp%3600000)/60000);
+    const secsUp = Math.floor((diffUp%60000)/1000);
+    document.getElementById('cnt-up-days').textContent = String(daysUp).padStart(2,'0');
+    document.getElementById('cnt-up-hours').textContent = String(hoursUp).padStart(2,'0');
+    document.getElementById('cnt-up-mins').textContent = String(minsUp).padStart(2,'0');
+    document.getElementById('cnt-up-secs').textContent = String(secsUp).padStart(2,'0');
   }
-  const days = Math.floor(diff/86400000);
-  const hours = Math.floor((diff%86400000)/3600000);
-  const mins = Math.floor((diff%3600000)/60000);
-  const secs = Math.floor((diff%60000)/1000);
-  document.getElementById('cnt-days').textContent = String(days).padStart(2,'0');
-  document.getElementById('cnt-hours').textContent = String(hours).padStart(2,'0');
-  document.getElementById('cnt-mins').textContent = String(mins).padStart(2,'0');
-  document.getElementById('cnt-secs').textContent = String(secs).padStart(2,'0');
+
+  // Count DOWN (Engagement)
+  const targetDate = new Date("2026-11-20T00:00:00");
+  const diffDown = targetDate - new Date();
+  if (diffDown < 0) {
+    document.getElementById('cnt-down-days').textContent = '00';
+    document.getElementById('cnt-down-hours').textContent = '00';
+    document.getElementById('cnt-down-mins').textContent = '00';
+    document.getElementById('cnt-down-secs').textContent = '00';
+  } else {
+    const daysDown = Math.floor(diffDown/86400000);
+    const hoursDown = Math.floor((diffDown%86400000)/3600000);
+    const minsDown = Math.floor((diffDown%3600000)/60000);
+    const secsDown = Math.floor((diffDown%60000)/1000);
+    document.getElementById('cnt-down-days').textContent = String(daysDown).padStart(2,'0');
+    document.getElementById('cnt-down-hours').textContent = String(hoursDown).padStart(2,'0');
+    document.getElementById('cnt-down-mins').textContent = String(minsDown).padStart(2,'0');
+    document.getElementById('cnt-down-secs').textContent = String(secsDown).padStart(2,'0');
+  }
 }
 
 // ── LOVE JAR ──
