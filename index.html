@@ -325,13 +325,14 @@
     .home-date-badge { display:inline-block; background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(217,136,150,0.15)); border:1px solid rgba(212,175,55,0.3); border-radius:50px; padding:6px 18px; font-size:0.75rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
     .home-greeting { font-family:'Dancing Script',cursive; font-size:2.6rem; font-weight:700; line-height:1.2; background:linear-gradient(135deg,var(--gold),var(--rose),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     .home-sub { font-size:0.88rem; color:var(--text-dim); line-height:1.6; max-width:300px; margin:0 auto 24px; }
-    .countdown-widget { background:var(--glass); border:1px solid var(--glass-border); border-radius:22px; padding:20px; margin:0 20px 24px; backdrop-filter:blur(15px); box-shadow:0 10px 30px rgba(74,59,66,0.05); }
-    .countdown-label { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; text-align:center; }
-    .countdown-numbers { display:flex; justify-content:space-around; }
-    .count-unit { text-align:center; }
-    .count-num { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:700; background:linear-gradient(135deg,var(--gold),var(--rose)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
-    .count-lbl { font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
-    .count-sep { font-size:2rem; color:var(--text-dim); align-self:center; padding-bottom:10px; }
+    .countdown-widget { margin:0 20px 24px; text-align:center; padding-top:10px; }
+    .countdown-subtitle { font-size:0.55rem; color:var(--gold); text-transform:uppercase; letter-spacing:4px; margin-bottom:10px; font-weight:600; }
+    .countdown-title { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--text-main); margin-bottom:28px; font-weight:400; }
+    .countdown-numbers { display:flex; justify-content:center; gap:10px; }
+    .count-card { background:var(--bg-mid); border:1px solid rgba(212,175,55,0.3); border-radius:12px; padding:16px 8px; width:72px; box-shadow:0 8px 24px rgba(74,59,66,0.06); position:relative; display:flex; flex-direction:column; align-items:center; }
+    .count-card::after { content:''; position:absolute; inset:4px; border:1px solid rgba(212,175,55,0.2); border-radius:8px; pointer-events:none; }
+    .count-num { font-family:'Playfair Display',serif; font-size:1.9rem; font-weight:400; color:var(--gold); line-height:1; margin-bottom:6px; }
+    .count-lbl { font-size:0.55rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; z-index:1; }
     .section-title { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); padding:0 20px 14px; }
     .quick-cards { display:flex; gap:12px; padding:0 20px 24px; overflow-x:auto; }
     .quick-cards::-webkit-scrollbar { display:none; }
@@ -559,15 +560,25 @@
           <div class="home-sub">This little world was built just for you — a collection of our most precious moments together 💫</div>
         </div>
         <div class="countdown-widget fade-in-up delay-1">
-          <div class="countdown-label">✦ Our Days Together ✦</div>
+          <div class="countdown-subtitle">COUNTING THE MOMENTS</div>
+          <div class="countdown-title">Until we celebrate</div>
           <div class="countdown-numbers">
-            <div class="count-unit"><div class="count-num" id="cnt-days">—</div><div class="count-lbl">Days</div></div>
-            <div class="count-sep">:</div>
-            <div class="count-unit"><div class="count-num" id="cnt-hours">—</div><div class="count-lbl">Hours</div></div>
-            <div class="count-sep">:</div>
-            <div class="count-unit"><div class="count-num" id="cnt-mins">—</div><div class="count-lbl">Mins</div></div>
-            <div class="count-sep">:</div>
-            <div class="count-unit"><div class="count-num" id="cnt-secs">—</div><div class="count-lbl">Secs</div></div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-days">—</div>
+              <div class="count-lbl">DAYS</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-hours">—</div>
+              <div class="count-lbl">HOURS</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-mins">—</div>
+              <div class="count-lbl">MINUTES</div>
+            </div>
+            <div class="count-card">
+              <div class="count-num" id="cnt-secs">—</div>
+              <div class="count-lbl">SECONDS</div>
+            </div>
           </div>
         </div>
         <div class="jar-container fade-in-up delay-2">
@@ -1000,8 +1011,15 @@ function initApp() {
 
 // ── COUNTDOWN ──
 function updateCountdown() {
-  const diff = new Date() - new Date(CONFIG.startDate);
-  if (diff < 0) return;
+  const targetDate = new Date("2026-11-20T00:00:00");
+  const diff = targetDate - new Date();
+  if (diff < 0) {
+    document.getElementById('cnt-days').textContent = '00';
+    document.getElementById('cnt-hours').textContent = '00';
+    document.getElementById('cnt-mins').textContent = '00';
+    document.getElementById('cnt-secs').textContent = '00';
+    return;
+  }
   const days = Math.floor(diff/86400000);
   const hours = Math.floor((diff%86400000)/3600000);
   const mins = Math.floor((diff%3600000)/60000);
