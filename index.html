@@ -622,74 +622,117 @@
 // ════════════════════════════════════════════════════
 
 const HUNT_CLUES = [
+
+  // ═══════════════════════════════════════════════════
+  //  CLUE 1
+  // ═══════════════════════════════════════════════════
   {
     icon: "🗺️",
-    label: "Your adventure begins...",
+    label: "The hunt begins, my love...",
     clueText:
-`Every journey starts somewhere quiet,
-somewhere familiar —
-the place that carries us everywhere
-without making a sound.
+`I hid a little piece of this journey
+somewhere that belongs to both of us —
+a place that moves, yet always stays.
 
-Go there. I left something for you. 🌹`,
+It carries us without being asked.
+It holds our silences and our songs.
+
+Go look there, Nada.
+I left something just for you. 🌹`,
     clueEmoji: "🚗",
-    goIcon: "🚗",
-    goLocation: "Inside the car — check somewhere you'd least expect it",
-    code: "lola",        // !! CHANGE THIS to whatever word you write on paper 1
-    revealMsg: "🌹 You found it! See? I think of you even in the smallest places. Now... where next?"
+    goIcon: "📍",
+    goLocation: "[ المكان الأول — غيّره هنا ]",   // ← EDIT: اكتب المكان الحقيقي هنا
+    code: "lola",                                  // ← EDIT: الكلمة السرية على الورقة الأولى
+    revealMsg: "🌹 You found it. See? Even in the quietest places, I'm thinking of you. On to the next one, love..."
   },
+
+  // ═══════════════════════════════════════════════════
+  //  CLUE 2
+  // ═══════════════════════════════════════════════════
   {
     icon: "🦋",
-    label: "The second clue...",
+    label: "You're doing so well...",
     clueText:
-`You kept something I once gave you —
-something with wings,
-something rare.
+`You are someone who keeps things.
 
-Find the place where you keep the things
-that matter most to you.`,
-    clueEmoji: "🦋",
-    goIcon: "💼",
-    goLocation: "Where you keep your most precious things — your bag, drawer, or wallet",
-    code: "wings",       // !! CHANGE THIS to whatever word you write on paper 2
-    revealMsg: "🦋 You keep beautiful things safe. Just like you keep me."
+Not just objects —
+you keep feelings, small moments,
+the kind of memories most people let slip away.
+
+You kept the butterfly.
+You kept the ticket.
+You kept me, somehow.
+
+Go to the place where
+you keep what matters most.
+
+I'm there too, in a way. 🦋`,
+    clueEmoji: "💌",
+    goIcon: "📍",
+    goLocation: "[ المكان التاني — غيّره هنا ]",   // ← EDIT: اكتب المكان الحقيقي هنا
+    code: "wings",                                  // ← EDIT: الكلمة السرية على الورقة التانية
+    revealMsg: "🦋 You keep beautiful things safe. The way you keep people... you're rare, Nada. One more stop."
   },
+
+  // ═══════════════════════════════════════════════════
+  //  CLUE 3
+  // ═══════════════════════════════════════════════════
   {
     icon: "🕰️",
-    label: "Getting closer...",
+    label: "Almost there, my love...",
     clueText:
-`There's a place where time felt
-like it belonged to just us —
-where we made a memory
-that lives in my chest forever.
+`Do you remember that afternoon?
 
-Think of that afternoon.
-Think of where we were.`,
+The one that felt borrowed from another world —
+where time slowed down
+just enough for us to notice each other.
+
+Horloge.
+
+That word means clock.
+But for me, it means
+the afternoon I realized
+I didn't want time to move at all.
+
+Find what that memory left behind.
+It's waiting for you somewhere. ⏰`,
     clueEmoji: "⏰",
-    goIcon: "🕰️",
-    goLocation: "Somewhere that reminds you of Horloge — a clock, a shelf, a quiet corner",
-    code: "horloge",     // !! CHANGE THIS to whatever word you write on paper 3
-    revealMsg: "⏰ That afternoon... I'd go back to it a thousand times."
+    goIcon: "📍",
+    goLocation: "[ المكان التالت — غيّره هنا ]",   // ← EDIT: اكتب المكان الحقيقي هنا
+    code: "horloge",                                // ← EDIT: الكلمة السرية على الورقة التالتة
+    revealMsg: "⏰ That afternoon lives inside me. I'd go back to it a thousand times. Last one, Nada..."
   },
+
+  // ═══════════════════════════════════════════════════
+  //  CLUE 4 — THE FINAL ONE
+  // ═══════════════════════════════════════════════════
   {
     icon: "🎂",
-    label: "The final clue...",
+    label: "This is the last one...",
     clueText:
-`You've followed every trail I left.
-Every little piece of me
-hiding in the corners of your world.
+`You made it.
 
-One last paper waits for you —
-and on it is the key
-to open everything I built for you.
+Through every hiding spot,
+every little trail I scattered just for you —
+you followed all of it.
 
-Happy Birthday, Nada. 💕`,
+There is one last paper.
+On it is the key
+to everything I built for you.
+
+Everything I couldn't say out loud.
+Everything I wanted you to know
+on this day, of all days.
+
+Happy Birthday, Nada.
+You deserve this and so much more. 💕`,
     clueEmoji: "🎁",
-    goIcon: "🎀",
-    goLocation: "The last hiding spot — check the most special place you can think of",
-    code: "nada1409",    // !! CHANGE THIS to whatever code you write on the final paper
-    revealMsg: "🎂 Happy Birthday, Nada. You found every piece. Now let me show you what's inside... 💕"
+    goIcon: "📍",
+    goLocation: "[ المكان الأخير — غيّره هنا ]",   // ← EDIT: اكتب المكان الحقيقي هنا
+    code: "nada1409",                               // ← EDIT: الكود السري على الورقة الأخيرة
+    revealMsg: "🎂 You found every single piece, Nada. Now open what I built for you... it's all yours. 💕"
   }
+
 ];
 
 // ════════════════════════════════════════════════════
