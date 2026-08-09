@@ -122,75 +122,209 @@
     }
     @keyframes loadBar { from { width: 0; } to { width: 100%; } }
 
-    /* ─── PASSCODE SCREEN ─── */
+    /* ─── TREASURE HUNT SCREEN ─── */
     #passcode {
       background: linear-gradient(160deg, #1a0a2e 0%, #0d0520 100%);
-      padding: 20px;
+      padding: 20px; overflow-y: auto;
+      align-items: flex-start; justify-content: flex-start;
     }
-    .passcode-card {
+    .hunt-wrap {
+      width: 100%; max-width: 400px;
+      margin: 0 auto;
+      padding: 60px 0 40px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* progress keys bar */
+    .hunt-progress {
+      display: flex; gap: 10px; margin-bottom: 32px;
+      align-items: center;
+    }
+    .hunt-key {
+      font-size: 1.5rem;
+      filter: grayscale(1) opacity(0.3);
+      transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .hunt-key.unlocked {
+      filter: grayscale(0) opacity(1) drop-shadow(0 0 8px var(--gold));
+      transform: scale(1.2) rotate(-10deg);
+    }
+    .hunt-key-sep { font-size: 0.7rem; color: var(--text-dim); }
+
+    /* main clue card */
+    .clue-card {
+      width: 100%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
       border-radius: 28px;
-      padding: 40px 30px;
-      width: 100%; max-width: 360px;
+      padding: 30px 24px 26px;
       text-align: center;
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      position: relative; overflow: hidden;
+      transition: transform 0.4s ease, opacity 0.4s ease;
     }
-    .lock-icon {
-      font-size: 3rem; margin-bottom: 12px;
-      animation: lockBounce 2s ease-in-out infinite;
+    .clue-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top, rgba(232,201,122,0.06), transparent 70%);
+      pointer-events: none;
     }
-    @keyframes lockBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    .clue-card.slide-out-left {
+      transform: translateX(-120%) rotate(-8deg); opacity: 0;
     }
-    .passcode-title {
+    .clue-card.slide-in-right {
+      animation: slideInRight 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(120%) rotate(8deg); opacity: 0; }
+      to   { transform: translateX(0) rotate(0deg); opacity: 1; }
+    }
+
+    .clue-num {
+      font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .clue-icon {
+      font-size: 3.2rem; margin-bottom: 14px;
+      animation: clueFloat 3s ease-in-out infinite;
+      display: block;
+    }
+    @keyframes clueFloat {
+      0%,100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-10px) rotate(3deg); }
+    }
+    .clue-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.6rem; margin-bottom: 6px;
-      color: var(--gold-light);
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--gold-light); margin-bottom: 14px;
     }
-    .passcode-hint {
-      font-size: 0.8rem; color: var(--text-dim); margin-bottom: 30px;
-      line-height: 1.5;
+    .clue-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem; line-height: 1.7;
+      color: var(--cream); font-style: italic;
+      margin-bottom: 22px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px; padding: 14px;
+      border-left: 3px solid var(--gold);
     }
-    .pin-dots {
-      display: flex; gap: 16px; justify-content: center; margin-bottom: 30px;
+
+    /* answer input */
+    .answer-wrap {
+      position: relative; margin-bottom: 14px;
     }
-    .pin-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 2px solid var(--gold);
-      transition: all 0.3s ease;
-    }
-    .pin-dot.filled {
-      background: var(--gold);
-      box-shadow: 0 0 12px var(--gold);
-    }
-    .pin-dot.error { border-color: var(--rose); background: var(--rose); box-shadow: 0 0 12px var(--rose); }
-    .keypad {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-    }
-    .key {
+    .answer-input {
+      width: 100%;
       background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px; padding: 18px 10px;
-      font-size: 1.4rem; font-weight: 500;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      user-select: none;
+      border: 1.5px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 14px 50px 14px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem; color: var(--text-main);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      -webkit-appearance: none;
     }
-    .key:active, .key.pressed {
-      background: rgba(232,201,122,0.2);
+    .answer-input::placeholder { color: var(--text-dim); }
+    .answer-input:focus {
       border-color: var(--gold);
-      transform: scale(0.93);
+      box-shadow: 0 0 0 3px rgba(232,201,122,0.15);
     }
-    .key.del { font-size: 1rem; color: var(--rose-light); }
-    .key.empty { background: transparent; border: none; pointer-events: none; }
-    .passcode-error {
-      margin-top: 16px; color: var(--rose);
-      font-size: 0.85rem; animation: shake 0.4s ease;
+    .answer-input.correct {
+      border-color: #6bcb77;
+      box-shadow: 0 0 0 3px rgba(107,203,119,0.2);
     }
+    .answer-input.wrong {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 3px rgba(232,116,138,0.2);
+      animation: shake 0.4s ease;
+    }
+    .submit-btn {
+      position: absolute; right: 8px; top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, var(--gold), var(--rose));
+      border: none; border-radius: 10px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+    .submit-btn:active { transform: translateY(-50%) scale(0.9); }
+
+    .answer-feedback {
+      font-size: 0.82rem; min-height: 20px;
+      transition: all 0.3s ease; text-align: center;
+    }
+    .answer-feedback.wrong-msg { color: var(--rose); }
+    .answer-feedback.right-msg { color: #6bcb77; }
+
+    /* hint */
+    .hint-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-top: 14px;
+    }
+    .hint-btn {
+      font-size: 0.75rem; color: var(--text-dim);
+      cursor: pointer; text-decoration: underline;
+      transition: color 0.3s;
+      background: none; border: none; font-family: inherit;
+    }
+    .hint-btn:hover { color: var(--purple-light); }
+    .hint-text {
+      font-size: 0.78rem; color: var(--purple-light);
+      margin-top: 8px; font-style: italic;
+      animation: fadeInUp 0.4s ease forwards;
+      display: none;
+    }
+    .hint-text.show { display: block; }
+    .hint-uses { font-size: 0.72rem; color: var(--text-dim); }
+
+    /* unlock celebration overlay */
+    #unlock-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: radial-gradient(ellipse at center, #2d1b4e 0%, #0d0520 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+      text-align: center; padding: 30px;
+    }
+    #unlock-overlay.show { opacity: 1; pointer-events: all; }
+    .unlock-icon {
+      font-size: 5rem; margin-bottom: 20px;
+      animation: unlockPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes unlockPop {
+      from { transform: scale(0) rotate(-20deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .unlock-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.8rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--rose-light), var(--purple-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    .unlock-sub {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; color: var(--cream);
+      font-style: italic; line-height: 1.6; max-width: 280px;
+      margin-bottom: 32px;
+    }
+    .unlock-btn {
+      background: linear-gradient(135deg, var(--gold), var(--rose));
+      border: none; border-radius: 18px;
+      padding: 16px 40px;
+      font-size: 1rem; font-weight: 600;
+      color: var(--bg-deep); cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .unlock-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 0 30px rgba(232,201,122,0.5);
+    }
+
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       25% { transform: translateX(-8px); }
@@ -649,37 +783,65 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════
-     PASSCODE SCREEN
+     TREASURE HUNT SCREEN
 ════════════════════════════════════════════════ -->
 <div class="screen hidden" id="passcode">
-  <div class="passcode-card">
-    <div class="lock-icon">🔐</div>
-    <div class="passcode-title">Enter The Secret</div>
-    <div class="passcode-hint">Our special date hides the key...<br/>✨ Think of a date that started it all</div>
-    <div class="pin-dots">
-      <div class="pin-dot" id="dot-0"></div>
-      <div class="pin-dot" id="dot-1"></div>
-      <div class="pin-dot" id="dot-2"></div>
-      <div class="pin-dot" id="dot-3"></div>
+  <div class="hunt-wrap">
+
+    <!-- KEY PROGRESS -->
+    <div class="hunt-progress">
+      <span class="hunt-key" id="hkey-0">🗝️</span>
+      <span class="hunt-key-sep">›</span>
+      <span class="hunt-key" id="hkey-1">🗝️</span>
+      <span class="hunt-key-sep">›</span>
+      <span class="hunt-key" id="hkey-2">🗝️</span>
+      <span class="hunt-key-sep">›</span>
+      <span class="hunt-key" id="hkey-3">🔐</span>
     </div>
-    <div class="keypad">
-      <div class="key" onclick="pressKey('1')">1</div>
-      <div class="key" onclick="pressKey('2')">2</div>
-      <div class="key" onclick="pressKey('3')">3</div>
-      <div class="key" onclick="pressKey('4')">4</div>
-      <div class="key" onclick="pressKey('5')">5</div>
-      <div class="key" onclick="pressKey('6')">6</div>
-      <div class="key" onclick="pressKey('7')">7</div>
-      <div class="key" onclick="pressKey('8')">8</div>
-      <div class="key" onclick="pressKey('9')">9</div>
-      <div class="key empty"></div>
-      <div class="key" onclick="pressKey('0')">0</div>
-      <div class="key del" onclick="deleteKey()">⌫</div>
+
+    <!-- CLUE CARD -->
+    <div class="clue-card" id="clue-card">
+      <div class="clue-num" id="clue-num">Clue 1 of 4</div>
+      <span class="clue-icon" id="clue-icon">🦋</span>
+      <div class="clue-title" id="clue-title">The First Clue</div>
+      <div class="clue-text" id="clue-text">Loading...</div>
+
+      <div class="answer-wrap">
+        <input
+          class="answer-input"
+          id="answer-input"
+          type="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          placeholder="Your answer..."
+          onkeydown="if(event.key==='Enter') checkAnswer()"
+        />
+        <button class="submit-btn" onclick="checkAnswer()">→</button>
+      </div>
+
+      <div class="answer-feedback" id="answer-feedback"></div>
+
+      <div class="hint-row">
+        <button class="hint-btn" onclick="showHint()">💡 Show a hint</button>
+        <span class="hint-uses" id="hint-uses"></span>
+      </div>
+      <div class="hint-text" id="hint-text"></div>
     </div>
-    <div class="passcode-error" id="passcode-error" style="display:none;">
-      ✗ Try again, my love... 💕
-    </div>
+
   </div>
+</div>
+
+<!-- UNLOCK CELEBRATION -->
+<div id="unlock-overlay">
+  <div class="unlock-icon">🔓</div>
+  <div class="unlock-title">Vault Unlocked!</div>
+  <div class="unlock-sub">
+    You found all the keys, my clever love...<br/>
+    Your vault is waiting for you. 💕
+  </div>
+  <button class="unlock-btn" onclick="enterApp()">Open My Vault ✨</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════
@@ -1021,10 +1183,49 @@ const FLIP_CARDS = [
 ];
 
 // ═══════════════════════════════════════════════
+// TREASURE HUNT DATA — The 4 clues for Nada 🗝️
+// ═══════════════════════════════════════════════
+const CLUES = [
+  {
+    icon: "🦋",
+    title: "The Rarest Thing",
+    text: `I gave you something delicate and beautiful —\nsmall wings that I pressed with care.\nYou kept it. You kept me.\n\nWhat did I give you that day? 🌸`,
+    answers: ["butterfly", "the butterfly", "fara8a", "farasha", "فراشة", "فرشة"],
+    hint: "It has wings, it's delicate... and you still have it somewhere safe 🦋",
+    successMsg: "🦋 Beautiful! Just like that butterfly — just like you."
+  },
+  {
+    icon: "🕰️",
+    title: "Frozen in Time",
+    text: `We went somewhere together,\na place where time seemed to pause.\nEvery minute there felt precious.\n\nWhere did we go that day? ✨`,
+    answers: ["horloge", "el horloge", "horlog", "الهورلوج", "هورلوج", "horloj"],
+    hint: "It's a French word... it means something related to time ⏰",
+    successMsg: "⏰ That afternoon will always live in my heart."
+  },
+  {
+    icon: "🚋",
+    title: "A Little Ticket",
+    text: `You kept the smallest thing —\na piece of paper most people throw away.\nBut you held onto it like it mattered.\n\nWhat was it? 🎟️`,
+    answers: ["tram", "tram ticket", "el tram", "tramway", "ticket", "el ticket", "ترام", "التذكرة", "tazkarah"],
+    hint: "It's something you use for transportation... a paper ticket 🚋",
+    successMsg: "🎟️ That little ticket meant everything. So do you."
+  },
+  {
+    icon: "🎂",
+    title: "The Day That Started Everything",
+    text: `Every year this day comes around,\nbut this one is different.\nThis is the first one that belongs to us.\n\nWhat date is today? 💕\n(Format: DD/MM)`,
+    answers: ["14/9", "14/09", "september 14", "14 september", "14 sep", "١٤ سبتمبر", "١٤/٩"],
+    hint: "It's the reason this whole vault was built... today's date 🎂",
+    successMsg: "🎂 Happy Birthday, Nada. You solved it. You're incredible. 💕"
+  }
+];
+
+// ═══════════════════════════════════════════════
 // APP LOGIC
 // ═══════════════════════════════════════════════
 
-let pinInput = "";
+let currentClue = 0;
+let hintShownCount = 0;
 let currentMsgIndex = 0;
 let musicEnabled = false;
 
@@ -1033,85 +1234,136 @@ function createParticles() {
   const container = document.getElementById('particles');
   const colors = ['#e8c97a','#e8748a','#9b72cf','#f5a0b0','#c4a8e8'];
   const symbols = ['✦','♥','✿','·','⋆','꩜','◈'];
-
   for (let i = 0; i < 35; i++) {
     const el = document.createElement('div');
     el.className = 'particle';
     const size = Math.random() * 6 + 3;
     const color = colors[Math.floor(Math.random() * colors.length)];
     const isSymbol = Math.random() > 0.6;
-    
     if (isSymbol) {
-      el.style.cssText = `
-        left: ${Math.random() * 100}%;
-        font-size: ${Math.random() * 12 + 8}px;
-        color: ${color};
-        animation-duration: ${Math.random() * 15 + 12}s;
-        animation-delay: ${Math.random() * 10}s;
-        background: transparent;
-        width: auto; height: auto;
-        border-radius: 0;
-      `;
+      el.style.cssText = `left:${Math.random()*100}%;font-size:${Math.random()*12+8}px;color:${color};animation-duration:${Math.random()*15+12}s;animation-delay:${Math.random()*10}s;background:transparent;width:auto;height:auto;border-radius:0;`;
       el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
     } else {
-      el.style.cssText = `
-        left: ${Math.random() * 100}%;
-        width: ${size}px; height: ${size}px;
-        background: ${color};
-        animation-duration: ${Math.random() * 15 + 12}s;
-        animation-delay: ${Math.random() * 10}s;
-        opacity: 0.4;
-      `;
+      el.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;background:${color};animation-duration:${Math.random()*15+12}s;animation-delay:${Math.random()*10}s;opacity:0.4;`;
     }
     container.appendChild(el);
   }
 }
 
-// Splash → Passcode
+// Splash → Treasure Hunt
 function initSplash() {
   createParticles();
   setTimeout(() => {
     document.getElementById('splash').classList.add('hidden');
     document.getElementById('passcode').classList.remove('hidden');
+    loadClue(0);
   }, 2800);
 }
 
-// Passcode logic
-function pressKey(num) {
-  if (pinInput.length >= 4) return;
-  pinInput += num;
-  updateDots();
-  if (pinInput.length === 4) checkPasscode();
+// Load a clue into the card
+function loadClue(index) {
+  const clue = CLUES[index];
+  document.getElementById('clue-num').textContent = `Clue ${index + 1} of ${CLUES.length}`;
+  document.getElementById('clue-icon').textContent = clue.icon;
+  document.getElementById('clue-title').textContent = clue.title;
+  document.getElementById('clue-text').textContent = clue.text;
+  document.getElementById('answer-input').value = '';
+  document.getElementById('answer-input').className = 'answer-input';
+  document.getElementById('answer-feedback').textContent = '';
+  document.getElementById('answer-feedback').className = 'answer-feedback';
+  document.getElementById('hint-text').textContent = clue.hint;
+  document.getElementById('hint-text').classList.remove('show');
+  document.getElementById('hint-uses').textContent = '';
+  hintShownCount = 0;
+  setTimeout(() => document.getElementById('answer-input').focus(), 400);
 }
-function deleteKey() {
-  pinInput = pinInput.slice(0, -1);
-  updateDots();
-}
-function updateDots() {
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById(`dot-${i}`);
-    dot.classList.toggle('filled', i < pinInput.length);
-    dot.classList.remove('error');
-  }
-}
-function checkPasscode() {
-  if (pinInput === CONFIG.passcode) {
-    document.getElementById('passcode').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    initApp();
+
+// Check the user's answer
+function checkAnswer() {
+  const input = document.getElementById('answer-input');
+  const feedback = document.getElementById('answer-feedback');
+  const raw = input.value.trim().toLowerCase();
+  if (!raw) return;
+
+  const clue = CLUES[currentClue];
+  const correct = clue.answers.some(a => a.toLowerCase() === raw);
+
+  if (correct) {
+    input.classList.add('correct');
+    feedback.className = 'answer-feedback right-msg';
+    feedback.textContent = clue.successMsg;
+
+    // Unlock key in progress bar
+    const keyEl = document.getElementById(`hkey-${currentClue}`);
+    if (keyEl) { keyEl.textContent = '🗝️'; keyEl.classList.add('unlocked'); }
+
+    miniConfetti();
+
+    if (currentClue < CLUES.length - 1) {
+      setTimeout(() => {
+        const card = document.getElementById('clue-card');
+        card.classList.add('slide-out-left');
+        setTimeout(() => {
+          currentClue++;
+          card.classList.remove('slide-out-left');
+          card.classList.add('slide-in-right');
+          loadClue(currentClue);
+          setTimeout(() => card.classList.remove('slide-in-right'), 600);
+        }, 400);
+      }, 1500);
+    } else {
+      // All clues solved!
+      const lockKey = document.getElementById('hkey-3');
+      if (lockKey) { lockKey.textContent = '🔓'; lockKey.classList.add('unlocked'); }
+      setTimeout(() => showUnlockScreen(), 1800);
+    }
   } else {
-    showError();
-    setTimeout(() => { pinInput = ""; updateDots(); }, 900);
+    input.classList.add('wrong');
+    feedback.className = 'answer-feedback wrong-msg';
+    const wrongs = [
+      "✗ Not quite... try again, love 💕",
+      "✗ Hmm, think a little more... 🤔",
+      "✗ So close! You've got this 🌟",
+      "✗ Keep thinking... I believe in you 💫",
+    ];
+    feedback.textContent = wrongs[Math.floor(Math.random() * wrongs.length)];
+    setTimeout(() => { input.classList.remove('wrong'); }, 700);
   }
 }
-function showError() {
-  for (let i = 0; i < 4; i++) {
-    document.getElementById(`dot-${i}`).classList.add('error');
-    document.getElementById(`dot-${i}`).classList.remove('filled');
+
+// Show hint
+function showHint() {
+  hintShownCount++;
+  document.getElementById('hint-text').classList.add('show');
+  document.getElementById('hint-uses').textContent = `(hint ${hintShownCount})`;
+}
+
+// Unlock celebration screen
+function showUnlockScreen() {
+  launchConfetti();
+  document.getElementById('unlock-overlay').classList.add('show');
+}
+
+// Enter the app after unlock
+function enterApp() {
+  document.getElementById('unlock-overlay').classList.remove('show');
+  document.getElementById('passcode').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  initApp();
+}
+
+// Mini confetti burst on correct answer
+function miniConfetti() {
+  const colors = ['#e8c97a','#e8748a','#9b72cf','#f5e3a0','#f5a0b0'];
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;border-radius:${Math.random()>0.5?'50%':'2px'};animation-duration:${Math.random()*2+1.5}s;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }, i * 40);
   }
-  const err = document.getElementById('passcode-error');
-  err.style.display = 'block';
-  setTimeout(() => { err.style.display = 'none'; }, 2000);
 }
 
 // App init
