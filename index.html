@@ -496,37 +496,19 @@
         </div>
       </div>
 
-      <div class="go-badge" id="go-badge">
-        <div class="go-badge-icon" id="go-icon">📍</div>
-        <div class="go-badge-text">
-          <div class="go-badge-label">🔍 Go find the paper at...</div>
-          <div class="go-badge-location" id="go-location">Loading...</div>
-        </div>
+      <!-- Video Player Section -->
+      <div class="video-section" id="video-section" style="display:none; padding: 0 20px 20px; text-align:center;">
+        <video id="clue-video" controls playsinline style="width:100%; border-radius:12px; border:1px solid rgba(212,175,55,0.3); box-shadow:0 8px 24px rgba(74,59,66,0.08);"></video>
       </div>
 
-      <!-- Reveal message (shown after correct code) -->
+      <!-- Reveal message -->
       <div class="reveal-msg" id="reveal-msg">
         <div class="reveal-msg-text" id="reveal-msg-text"></div>
       </div>
 
-      <!-- Code input -->
+      <!-- Continue Action -->
       <div class="code-section" id="code-section">
-        <div class="code-label"><span>📝</span> Enter the code from the paper</div>
-        <div class="code-input-wrap">
-          <input
-            class="code-input"
-            id="code-input"
-            type="text"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-            placeholder="Secret code..."
-            onkeydown="if(event.key==='Enter') submitCode()"
-          />
-          <button class="code-submit" onclick="submitCode()">→</button>
-        </div>
-        <div class="code-feedback" id="code-feedback"></div>
+        <button onclick="continueHunt()" style="width:100%; background:linear-gradient(135deg,var(--gold),var(--rose)); border:none; border-radius:12px; padding:16px; color:#fff; font-weight:bold; font-size:1.1rem; cursor:pointer; font-family:'Playfair Display',serif; letter-spacing:1px; box-shadow:0 4px 15px rgba(212,175,55,0.3);">Next Memory ✨</button>
       </div>
 
     </div><!-- end clue-card -->
@@ -734,9 +716,7 @@ It holds our silences and our songs.
 Go look there, Nada.
 I left something just for you. 🌹`,
     clueEmoji: "🚗",
-    goIcon: "📍",
-    goLocation: "[ بصي تحت الكرسي ]",   // ← EDIT: اكتب المكان الحقيقي هنا
-    code: "123",                                  // ← EDIT: الكلمة السرية على الورقة الأولى
+    videoSrc: "assets/video1.mp4", // ← EDIT: Put your video path/URL here
     revealMsg: "🌹 You found it. See? Even in the quietest places, I'm thinking of you. On to the next one, love..."
   },
 
@@ -762,9 +742,7 @@ you keep what matters most.
 
 I'm there too, in a way. 🦋`,
     clueEmoji: "💌",
-    goIcon: "📍",
-    goLocation: "[ افتحي المراية ]",   // ← EDIT: اكتب المكان الحقيقي هنا
-    code: "456",                                  // ← EDIT: الكلمة السرية على الورقة التانية
+    videoSrc: "assets/video2.mp4", // ← EDIT: Put your video path/URL here
     revealMsg: "🦋 You keep beautiful things safe. The way you keep people... you're rare, Nada. One more stop."
   },
 
@@ -791,9 +769,7 @@ I didn't want time to move at all.
 Find what that memory left behind.
 It's waiting for you somewhere. ⏰`,
     clueEmoji: "⏰",
-    goIcon: "📍",
-    goLocation: "[ شوفي محفظتك ]",   // ← EDIT: اكتب المكان الحقيقي هنا
-    code: "789",                                // ← EDIT: الكلمة السرية على الورقة التالتة
+    videoSrc: "assets/video3.mp4", // ← EDIT: Put your video path/URL here
     revealMsg: "⏰ That afternoon lives inside me. I'd go back to it a thousand times. Last one, Nada..."
   },
 
@@ -821,9 +797,7 @@ on this day, of all days.
 Happy Birthday, Nada.
 You deserve this and so much more. 💕`,
     clueEmoji: "🎁",
-    goIcon: "📍",
-    goLocation: "[شنطة العربية ]",   // ← EDIT: اكتب المكان الحقيقي هنا
-    code: "1409",                               // ← EDIT: الكود السري على الورقة الأخيرة
+    videoSrc: "assets/video4.mp4", // ← EDIT: Put your video path/URL here
     revealMsg: "🎂 You found every single piece, Nada. Now open what I built for you... it's all yours. 💕"
   }
 
@@ -962,7 +936,44 @@ function updateTrail(solvedIndex) {
   if (next) next.classList.add('current');
 }
 
-// ── LOAD CLUE ──
+// ── CONTINUE HUNT ──
+function continueHunt() {
+  if (clueUnlocked) return; // prevent double-submit
+  
+  const clue = HUNT_CLUES[currentClue];
+  clueUnlocked = true;
+
+  const vidEl = document.getElementById('clue-video');
+  if (vidEl) vidEl.pause();
+
+  // show reveal message
+  const revealEl = document.getElementById('reveal-msg');
+  document.getElementById('reveal-msg-text').textContent = clue.revealMsg;
+  revealEl.classList.add('show');
+
+  miniConfetti();
+  updateTrail(currentClue);
+
+  if (currentClue < HUNT_CLUES.length - 1) {
+    setTimeout(() => {
+      const card = document.getElementById('clue-card');
+      card.classList.add('slide-out');
+      setTimeout(() => {
+        currentClue++;
+        loadClue(currentClue);
+        card.classList.remove('slide-out');
+        card.classList.add('slide-in');
+        setTimeout(() => card.classList.remove('slide-in'), 600);
+      }, 450);
+    }, 3500);
+  } else {
+    setTimeout(() => {
+      document.getElementById('unlock-overlay').classList.add('show');
+    }, 3500);
+  }
+}
+
+// ── TRICK QUESTIONS ──
 let currentTrick = 0;
 let yesScale = 1;
 let noScale = 1;
@@ -992,7 +1003,7 @@ function answerTrick(isYes) {
            card.classList.add('slide-in');
            setTimeout(() => card.classList.remove('slide-in'), 600);
          }, 450);
-       }, 3000);
+       }, 3500);
     } else {
        document.getElementById('trick-q').textContent = clue.questions[currentTrick];
        yesScale = 1;
@@ -1015,6 +1026,7 @@ function updateTrickButtons() {
   btnNo.style.display = noScale <= 0 ? 'none' : 'block';
 }
 
+// ── LOAD CLUE ──
 function loadClue(index) {
   const clue = HUNT_CLUES[index];
   clueUnlocked = false;
@@ -1027,7 +1039,7 @@ function loadClue(index) {
   document.getElementById('reveal-msg').classList.remove('show');
 
   if (clue.type === 'trick') {
-    document.getElementById('go-badge').style.display = 'none';
+    document.getElementById('video-section').style.display = 'none';
     document.getElementById('code-section').style.display = 'none';
     document.getElementById('trick-section').style.display = 'block';
     
@@ -1037,73 +1049,18 @@ function loadClue(index) {
     document.getElementById('trick-q').textContent = clue.questions[currentTrick];
     updateTrickButtons();
   } else {
-    document.getElementById('go-badge').style.display = 'flex';
-    document.getElementById('code-section').style.display = 'block';
     document.getElementById('trick-section').style.display = 'none';
+    document.getElementById('code-section').style.display = 'block';
     
-    document.getElementById('go-icon').textContent = clue.goIcon;
-    document.getElementById('go-location').textContent = clue.goLocation;
-    document.getElementById('code-input').value = '';
-    document.getElementById('code-input').className = 'code-input';
-    document.getElementById('code-feedback').textContent = '';
-    document.getElementById('code-feedback').className = 'code-feedback';
-    
-    setTimeout(() => document.getElementById('code-input').focus(), 400);
-  }
-}
-
-// ── SUBMIT CODE ──
-function submitCode() {
-  if (clueUnlocked) return; // prevent double-submit
-
-  const input = document.getElementById('code-input');
-  const feedback = document.getElementById('code-feedback');
-  const raw = input.value.trim().toLowerCase();
-  if (!raw) return;
-
-  const clue = HUNT_CLUES[currentClue];
-  const correct = raw === clue.code.toLowerCase();
-
-  if (correct) {
-    clueUnlocked = true;
-    input.classList.add('correct');
-    feedback.className = 'code-feedback ok';
-    feedback.textContent = '✓ Code accepted!';
-
-    // show reveal message
-    const revealEl = document.getElementById('reveal-msg');
-    document.getElementById('reveal-msg-text').textContent = clue.revealMsg;
-    revealEl.classList.add('show');
-
-    miniConfetti();
-    updateTrail(currentClue);
-
-    if (currentClue < HUNT_CLUES.length - 1) {
-      setTimeout(() => {
-        const card = document.getElementById('clue-card');
-        card.classList.add('slide-out');
-        setTimeout(() => {
-          currentClue++;
-          card.classList.remove('slide-out');
-          card.classList.add('slide-in');
-          loadClue(currentClue);
-          setTimeout(() => card.classList.remove('slide-in'), 600);
-        }, 400);
-      }, 2200);
+    const vidSec = document.getElementById('video-section');
+    const vidEl = document.getElementById('clue-video');
+    if (clue.videoSrc) {
+      vidSec.style.display = 'block';
+      vidEl.src = clue.videoSrc;
     } else {
-      // final clue solved!
-      setTimeout(showUnlockScreen, 2500);
+      vidSec.style.display = 'none';
+      vidEl.src = '';
     }
-  } else {
-    input.classList.add('wrong');
-    feedback.className = 'code-feedback err';
-    const tries = [
-      "✗ That's not it... keep looking 🔍",
-      "✗ Not quite — the code is on the paper 📝",
-      "✗ Check the paper again, love 💕",
-    ];
-    feedback.textContent = tries[Math.floor(Math.random() * tries.length)];
-    setTimeout(() => input.classList.remove('wrong'), 700);
   }
 }
 
