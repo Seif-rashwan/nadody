@@ -1628,7 +1628,7 @@ function renderStars() {
     btn.style.top = positions[i].top;
     btn.style.setProperty('--d', (2.5 + Math.random()*2) + 's');
     btn.style.setProperty('--delay', (Math.random()*2) + 's');
-    btn.onclick = (e) => showStarReason(reason, e);
+    btn.onclick = (e) => { e.stopPropagation(); showStarReason(reason, e); };
     field.appendChild(btn);
   });
 }
@@ -1638,12 +1638,16 @@ function showStarReason(text, e) {
   document.getElementById('star-tooltip-text').textContent = text;
   tooltip.classList.add('show');
   const rect = e.target.getBoundingClientRect();
-  let top = rect.top - 120;
-  if(top < 60) top = rect.bottom + 12;
+  let top = rect.top - 140;
+  if(top < 60) top = rect.bottom + 16;
+  if(top > window.innerHeight - 160) top = window.innerHeight - 160;
   tooltip.style.top = top + 'px';
   tooltip.style.left = '50%';
   tooltip.style.transform = 'translateX(-50%)';
-  document.addEventListener('click', hideStarTooltip, {once:true});
+  // Delay adding the dismiss listener so the current click bubble doesn't close it immediately
+  setTimeout(() => {
+    document.addEventListener('click', hideStarTooltip, {once: true});
+  }, 50);
 }
 function hideStarTooltip() {
   document.getElementById('star-tooltip').classList.remove('show');
