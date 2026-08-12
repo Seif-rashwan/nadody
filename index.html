@@ -1150,12 +1150,13 @@ function createParticles() {
 // ── SPLASH ──
 function initSplash() {
   createParticles();
+  initSplashAnimation();
   setTimeout(() => {
     document.getElementById('splash').classList.add('hidden');
     document.getElementById('hunt').classList.remove('hidden');
     buildTrail();
     loadClue(0);
-  }, 2800);
+  }, 3200);
 }
 
 // ── TRAIL ──
@@ -1343,7 +1344,6 @@ function initApp() {
   renderTickets();
   renderStars();
   checkBirthday();
-  initSplashAnimation();
 }
 
 function initSplashAnimation() {
