@@ -445,7 +445,7 @@
     ══════════════════════════════════ */
     /* Floaters — pure CSS, pre-defined elements */
     .floater {
-      position:fixed; bottom:-8%; pointer-events:none; z-index:3;
+      position:fixed; bottom:-8%; pointer-events:none; z-index:15;
       font-size:1.6rem; opacity:0;
       animation: riseUp linear infinite;
     }
@@ -456,7 +456,7 @@
       100% { transform:translateY(-108vh) rotate(8deg); opacity:0; }
     }
     .plane {
-      position:fixed; pointer-events:none; z-index:3; font-size:1.4rem; opacity:0;
+      position:fixed; pointer-events:none; z-index:15; font-size:1.4rem; opacity:0;
       animation: flyOver linear infinite;
     }
     @keyframes flyOver {
@@ -744,6 +744,22 @@
 ══════════════════════════════════════════ -->
 <div class="screen hidden" id="app">
   <div class="app-inner">
+    <!-- Floating graphics inside app -->
+    <div class="floater" style="left:8%;animation-duration:18s;animation-delay:0s;">🎈</div>
+    <div class="floater" style="left:22%;animation-duration:22s;animation-delay:5s;">💕</div>
+    <div class="floater" style="left:38%;animation-duration:16s;animation-delay:2s;">🩷</div>
+    <div class="floater" style="left:55%;animation-duration:20s;animation-delay:8s;">🌸</div>
+    <div class="floater" style="left:70%;animation-duration:17s;animation-delay:3s;">🎈</div>
+    <div class="floater" style="left:85%;animation-duration:24s;animation-delay:11s;">💖</div>
+    <div class="floater" style="left:14%;animation-duration:19s;animation-delay:14s;">✨</div>
+    <div class="floater" style="left:45%;animation-duration:21s;animation-delay:6s;">🩵</div>
+    <div class="floater" style="left:62%;animation-duration:15s;animation-delay:17s;">💗</div>
+    <div class="floater" style="left:90%;animation-duration:23s;animation-delay:2s;">🌸</div>
+    <div class="floater" style="left:30%;animation-duration:26s;animation-delay:20s;">🎈</div>
+    <div class="floater" style="left:75%;animation-duration:14s;animation-delay:9s;">💕</div>
+    <div class="plane"   style="left:-6%;top:28vh;animation-duration:14s;animation-delay:4s;">🛩️</div>
+    <div class="plane"   style="left:-6%;top:55vh;animation-duration:19s;animation-delay:22s;">✉️</div>
+    <div class="plane"   style="left:-6%;top:40vh;animation-duration:16s;animation-delay:38s;">🛩️</div>
     <div class="topbar">
       <div class="topbar-title">Nadody's Vault</div>
       <div class="music-btn" id="music-btn" onclick="toggleMusic()">🎵</div>
