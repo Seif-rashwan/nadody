@@ -595,6 +595,36 @@
       100% { opacity:0; transform:translate(var(--cx),var(--cy)) scale(0.4) rotate(720deg); }
     }
 
+    
+    /* === BUBBLES EFFECT === */
+    .soap-bubble {
+      position: fixed;
+      bottom: -50px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.1) 60%, rgba(200,220,255,0.4) 100%);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 5px rgba(255,255,255,0.2);
+      pointer-events: none;
+      z-index: 715; /* Above overlay but maybe behind some elements if needed, or 715 is fine */
+      animation: floatBubble var(--dur) ease-in forwards;
+    }
+    .soap-bubble::after {
+      content: '';
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      width: 25%;
+      height: 25%;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.6;
+      filter: blur(1px);
+    }
+    @keyframes floatBubble {
+      0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-120vh) translateX(var(--tx)) scale(1.2); opacity: 0; }
+    }
+
     /* ── Step 2: Product Reveal ── */
     .product-reveal-wrap {
       position:relative; display:flex; flex-direction:column;
@@ -1276,7 +1306,7 @@ I love you more than words can hold. 💕</div>
           <div class="letter-scroll-body" id="letter-scroll-body"></div>
           <div class="letter-scroll-divider">✦ How to use ✦</div>
           <div class="letter-scroll-how" id="letter-scroll-how"></div>
-          <button class="gift-close-btn" onclick="closeUnwrap()">يسلم إيدي اللي جابهالك 💕</button>
+          <button class="gift-close-btn" id="unwrap-close-btn" onclick="closeUnwrap()">يسلم إيدي اللي جابهالك 💕</button>
         </div>
       </div>
 
@@ -2197,11 +2227,33 @@ Love you! 💕`,
       { icon: '☀️', step: "Morning: 7oteeh el sob7 3ala clean lashes. Lw ht7oty makeup, put the serum first." },
       { icon: '🌙', step: "Night: Bllel abl ma tnamy, make sure en rmoshek maghsoula koways w mafhash ay makeup." },
       { icon: '👁️', step: "Steps: Zay el mascara belzabt.. mashieh 3ala rmoshek el fo2 w el ta7t, w 3ala hawagbek from roots to tips." },
-    ]
+    ],
+    buttonText: 'يسلم إيدي اللي جابهالك 💕',
+    hasBubbles: false
   },
-  { id: 2, locked: true, color: '#9b72cf', ribbonColor: '#7b52af', badge: '🔒 Coming Soon', name: '?????', image: null, tagline: 'هدية جاية قريباً... 🤍', loveNote: '', how: [] },
+  {
+    id: 2,
+    locked: false,
+    color: '#9b72cf',
+    ribbonColor: '#7b52af',
+    badge: '🎁 2nd Gift',
+    name: 'Bubble Gun & Flying Toy',
+    image: null,
+    tagline: '2nd Gift for Nadody 🫧🔫',
+    loveNote: `Ready for gift number 2? 🎉
+I know ad eh enty btfra7y lma bn3dy 3la el ragel bta3 el bubbles fl mashya. Fa 2olt badal ma nfdal ntfrg 3leh, agebelk el Bubble Gun da bta3ek lwa7dek ttal3y beh bubbles bra7tk!
+
+W kman gebtlk el l3ba el tanya ely btter fl sama de 34an el wld ely kan 3nd 3rbyet youssef harb mny abl makhodha mno w adehalk haha.. its all about seeing lma3et el fr7a f 3enek. You always bring out the inner child in me, w ana ba3sha2 ashofk mabsouta keda. Happy Birthday ya rou7y 💖`,
+    how: [
+      { icon: '🔫', step: "Step 1: Emli el khazna bta3t el saboun gowa el mosadas." },
+      { icon: '🫧', step: "Step 2: Dosy 3la el zorar w eghr2y el donia bubbles w etswary bra7tk." },
+      { icon: '🚁', step: "Step 3: Lma tzha2y mn el bubbles, edraby el l3ba el tanya fl sama w khly balk latshebek fl nagafa hahaha." },
+    ],
+    buttonText: 'Hatoli el gift ely b3dha 🎁',
+    hasBubbles: true
+  },
   { id: 3, locked: true, color: '#D98896', ribbonColor: '#c0697a', badge: '🔒 Coming Soon', name: '?????', image: null, tagline: 'هدية جاية قريباً... 🤍', loveNote: '', how: [] },
-];
+]
 // ── BALLOON LAUNCHER ──
 const BALLOON_MESSAGES = [
   { msg:"Seif ❤️ Nadody", color1:"#D98896", color2:"#c0697a", knot:"#c0697a" },
@@ -2320,6 +2372,32 @@ function renderGifts() {
   });
 }
 
+let bubbleInterval = null;
+
+function spawnBubbles() {
+  if(!bubbleInterval) {
+    bubbleInterval = setInterval(function() {
+      var b = document.createElement('div');
+      b.className = 'soap-bubble';
+      var size = 15 + Math.random() * 30;
+      b.style.width = size + 'px';
+      b.style.height = size + 'px';
+      b.style.left = (Math.random() * 100) + 'vw';
+      b.style.setProperty('--tx', ((Math.random() - 0.5) * 200) + 'px');
+      b.style.setProperty('--dur', (3 + Math.random() * 4) + 's');
+      document.body.appendChild(b);
+      setTimeout(function() { b.remove(); }, 8000);
+    }, 300);
+  }
+}
+
+function stopBubbles() {
+  if(bubbleInterval) {
+    clearInterval(bubbleInterval);
+    bubbleInterval = null;
+  }
+}
+
 function startUnwrap(gift) {
   currentUnwrapGift = gift;
   // Reset all steps
@@ -2380,6 +2458,12 @@ function unwrapStep1() {
     if(currentUnwrapGift.image) { img.src = currentUnwrapGift.image; img.style.display='block'; }
     else { img.style.display='none'; }
     document.getElementById('product-name-reveal').textContent = currentUnwrapGift.name;
+    
+    // Start bubbles if needed
+    if(currentUnwrapGift.hasBubbles) {
+      spawnBubbles();
+    }
+    
     // Tap to continue
     document.getElementById('unwrap-step-2').onclick = function() {
       document.getElementById('unwrap-step-2').classList.add('hidden');
@@ -2404,11 +2488,18 @@ function unwrapStep3() {
     howList.innerHTML = currentUnwrapGift.how.map(function(h) {
       return '<div class="gift-how-item"><span class="gift-how-icon">' + h.icon + '</span><span>' + h.step + '</span></div>';
     }).join('');
+    
+    // Update button text
+    var btn = document.getElementById('unwrap-close-btn');
+    if(btn) {
+      btn.textContent = currentUnwrapGift.buttonText || 'يسلم إيدي اللي جابهالك 💕';
+    }
   }, 1200);
 }
 
 function closeUnwrap() {
   document.getElementById('unwrap-overlay').classList.remove('show');
+  stopBubbles();
 }
 
 </script>
