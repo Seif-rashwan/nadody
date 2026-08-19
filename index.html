@@ -478,7 +478,7 @@
       border-radius:0 0 12px 12px;
       display:flex; align-items:center; justify-content:center; overflow:hidden;
     }
-    .bow { position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-size:1.4rem; z-index:3; }
+    .bow { position:absolute; top:-12px; right:-6px; transform:none; font-size:0.9rem; z-index:3; opacity:0.7; }
     .body-ribbon-v { position:absolute; top:0; bottom:0; left:50%; width:14px; transform:translateX(-50%); opacity:0.6; }
     .body-ribbon-h { position:absolute; left:0; right:0; top:35%; height:14px; opacity:0.6; }
     .lid-ribbon-h { position:absolute; top:50%; left:0; right:0; height:14px; transform:translateY(-50%); }
@@ -2313,8 +2313,8 @@ function renderGifts() {
       + '<div class="body-ribbon-h" style="background:' + gift.ribbonColor + ';"></div>'
       + '<span style="font-size:2rem;">' + (gift.locked ? '❔' : '🎁') + '</span>'
       + '</div></div>'
-      + '<div class="gift-name-tag">' + gift.name + '</div>'
-      + '<div class="gift-tagline">' + gift.tagline + '</div>';
+      + '<div class="gift-name-tag">' + (gift.locked ? '?????' : 'Tap to unwrap 🎁') + '</div>'
+      + '<div class="gift-tagline">' + (gift.locked ? '' : 'a surprise waits inside ✨') + '</div>';
     if(!gift.locked) { wrap.onclick = function() { startUnwrap(gift); }; }
     row.appendChild(wrap);
   });
